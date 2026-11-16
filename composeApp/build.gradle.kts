@@ -38,7 +38,8 @@ compose.desktop {
             packageName = "VitazoneSheetSync"
             packageVersion = "1.0.0"
             vendor = "Vitazone"
-            description = "Выгрузка отчётов 1С в Google Sheets"
+            // Только латиница: WiX (MSI/EXE) падает на кириллице в метаданных
+            description = "Vitazone 1C to Google Sheets sync"
             modules("java.net.http")
             windows {
                 menuGroup = "Vitazone"
