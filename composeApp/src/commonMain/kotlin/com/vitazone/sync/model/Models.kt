@@ -10,7 +10,7 @@ data class AppSettings(
     val login: String = "Админ",
     val password: String = "",
     /** URL веб-приложения Google Apps Script (doPost) */
-    val scriptUrl: String = "",
+    val scriptUrl: String = "https://script.google.com/macros/s/AKfycbwm0AYpJrZbO9kFoN67g1SE9mCxhPXfVcbfYoHuELnksz_SHfHwoXoQRG_cZxzYaZlrAA/exec",
     /** Секрет, который проверяет doPost (необязательно) */
     val secret: String = "",
     val salesSheet: String = "Продажа",

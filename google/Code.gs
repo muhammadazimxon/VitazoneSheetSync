@@ -13,6 +13,11 @@
  */
 const SECRET = 'поменяйте-этот-секрет';
 
+/** Проверка из браузера: откройте URL .../exec — должно показать {"ok":true,...} */
+function doGet() {
+  return out_({ ok: true, message: 'VitazoneSheetSync: веб-приложение работает' });
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(300000);
