@@ -17,7 +17,17 @@ class ODataException(message: String) : Exception(message)
  */
 class ODataClient(baseUrl: String, login: String, password: String) {
 
-    private val base = baseUrl.trim().trimEnd('/') + "/"
+    private val base: String = run {
+        val u = baseUrl.trim()
+        if (!u.startsWith("http://", true) && !u.startsWith("https://", true)) {
+            throw ODataException(
+                "«Адрес OData» должен быть веб-адресом публикации 1С, например " +
+                    "http://localhost/optom/odata/standard.odata/ — а не путём к папке базы ($u). " +
+                    "Опубликуйте базу на веб-сервере (см. ИНСТРУКЦИЯ.md, раздел 1)."
+            )
+        }
+        u.trimEnd('/') + "/"
+    }
     private val auth = "Basic " + Base64.getEncoder().encodeToString("$login:$password".toByteArray(UTF_8))
     private val json = Json { ignoreUnknownKeys = true }
     private val http = HttpClient.newBuilder()

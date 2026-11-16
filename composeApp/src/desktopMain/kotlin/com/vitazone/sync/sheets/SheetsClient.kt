@@ -94,6 +94,12 @@ class SheetsClient(private val scriptUrl: String, private val secret: String) {
             throw SheetsException("Нет связи с Google: ${e.message ?: e.javaClass.simpleName}")
         }
         val body = response.body()
+        if (response.statusCode() == 401 || response.statusCode() == 403) {
+            throw SheetsException(
+                "Google: нет доступа (HTTP ${response.statusCode()}). В Apps Script: Развернуть → Управление развертываниями → ✏️ → " +
+                    "«У кого есть доступ: Все» + «Версия: Новая версия» → Развернуть."
+            )
+        }
         val obj = try {
             json.parseToJsonElement(body).jsonObject
         } catch (_: Exception) {

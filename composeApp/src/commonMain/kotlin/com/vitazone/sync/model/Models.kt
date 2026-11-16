@@ -5,6 +5,10 @@ import kotlinx.serialization.Serializable
 /** Настройки приложения (хранятся в %APPDATA%\VitazoneSheetSync\settings.json). */
 @Serializable
 data class AppSettings(
+    /** Источник: "COM" — офлайн файловая база 1С напрямую; "ODATA" — веб-публикация */
+    val source: String = "COM",
+    /** Папка файловой базы 1С (где лежит 1Cv8.1CD), например D:\\1C\\Optom */
+    val basePath: String = "",
     /** Адрес публикации OData, например http://localhost/optom/odata/standard.odata/ */
     val odataUrl: String = "http://localhost/optom/odata/standard.odata/",
     val login: String = "Админ",
@@ -12,7 +16,7 @@ data class AppSettings(
     /** URL веб-приложения Google Apps Script (doPost) */
     val scriptUrl: String = "https://script.google.com/macros/s/AKfycbwm0AYpJrZbO9kFoN67g1SE9mCxhPXfVcbfYoHuELnksz_SHfHwoXoQRG_cZxzYaZlrAA/exec",
     /** Секрет, который проверяет doPost (необязательно) */
-    val secret: String = "",
+    val secret: String = "vz-n9rWj8kwxUIYFOlD3IOIFSui3g4qbxmc",
     val salesSheet: String = "Продажа",
     val stockSheet: String = "Остатка",
     val dailySheet: String = "Остатки по дням",

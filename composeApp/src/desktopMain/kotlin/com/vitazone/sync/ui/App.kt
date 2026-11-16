@@ -89,12 +89,28 @@ fun App(store: SettingsStore) {
                 ) {
                     Text("1С → Google Sheets", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     Text(
-                        "Отчёты: «Продажа отчети» (Номенклатура-Куратор) и «Остатки2» (Вариант2)",
+                        "Офлайн база 1С → Google Sheets. Отчёты: «Продажа отчети» (Номенклатура-Куратор) и «Остатки2» (Вариант2)",
                         style = MaterialTheme.typography.bodyMedium,
                     )
 
-                    Section("1С (OData)") {
-                        Field("Адрес OData", s.odataUrl, "http://localhost/optom/odata/standard.odata/") { s = s.copy(odataUrl = it) }
+                    Section("База 1С") {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(selected = s.source == "COM", onClick = { s = s.copy(source = "COM") })
+                            Text("Офлайн файловая база (напрямую)")
+                            Spacer(Modifier.width(16.dp))
+                            RadioButton(selected = s.source == "ODATA", onClick = { s = s.copy(source = "ODATA") })
+                            Text("Веб-публикация (OData)")
+                        }
+                        if (s.source == "COM") {
+                            Field("Папка базы 1С (где лежит 1Cv8.1CD)", s.basePath, "D:\\1C\\Optom") { s = s.copy(basePath = it) }
+                            Text(
+                                "Путь — как в списке баз 1С: «Изменить» → «Каталог информационной базы». " +
+                                    "Первый раз нажмите «Зарегистрировать COM 1С».",
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        } else {
+                            Field("Адрес OData", s.odataUrl, "http://localhost/optom/odata/standard.odata/") { s = s.copy(odataUrl = it) }
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Field("Логин", s.login, modifier = Modifier.weight(1f)) { s = s.copy(login = it) }
                             OutlinedTextField(
@@ -150,6 +166,7 @@ fun App(store: SettingsStore) {
 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                         OutlinedButton(onClick = { saveSettings() }, enabled = s != saved) { Text("Сохранить") }
+                        if (s.source == "COM") OutlinedButton(onClick = { scope.launch { guarded("Регистрация COM 1С") { service.registerCom() } } }, enabled = !running) { Text("Зарегистрировать COM 1С") }
                         OutlinedButton(onClick = { scope.launch { guarded("Проверка 1С") { service.checkOneC(s) } } }, enabled = !running) { Text("Проверить 1С") }
                         OutlinedButton(onClick = { scope.launch { guarded("Проверка Google") { service.checkGoogle(s) } } }, enabled = !running) { Text("Проверить Google") }
                         Spacer(Modifier.weight(1f))
